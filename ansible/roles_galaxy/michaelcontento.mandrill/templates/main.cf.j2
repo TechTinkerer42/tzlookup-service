@@ -1,0 +1,21 @@
+# enable SASL authentication
+smtp_sasl_auth_enable = yes
+
+# tell Postfix where the credentials are stored
+smtp_sasl_password_maps = hash:{{ mandrill_sasl_file }}
+smtp_sasl_security_options = noanonymous
+
+# use STARTTLS for encryption
+smtp_use_tls = yes
+
+relayhost = [smtp.mandrillapp.com]:587
+# Make sure Postfix listens to localhost only
+inet_interfaces = 127.0.0.1
+
+{% if mandrill_myhostname %}
+myhostname = {{ mandrill_myhostname }}
+{% endif %}
+
+{% if mandrill_mydomain %}
+mydomain = {{ mandrill_mydomain }}
+{% endif %}

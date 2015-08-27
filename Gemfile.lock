@@ -1,0 +1,21 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    pg (0.18.2)
+    puma (2.13.4)
+    rack (1.6.4)
+    roda (2.5.1)
+      rack
+    sequel (4.25.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  pg
+  puma
+  roda
+  sequel
+
+BUNDLED WITH
+   1.10.6

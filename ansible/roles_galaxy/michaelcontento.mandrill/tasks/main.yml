@@ -1,0 +1,38 @@
+- name: check is everything is configured
+  when: not mandrill_username or not mandrill_api_key
+  fail:
+    msg: you have to configure mandrill_username AND mandrill_api_key first!
+
+- name: install postfix via apt
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+  - postfix
+  - mailutils
+  - libsasl2-2
+  - libsasl2-modules
+  - ca-certificates
+
+- name: install Mandrill (Thawte Premium Server) SSL certificates
+  shell: creates=/etc/postfix/cacert.pem cat /etc/ssl/certs/Thawte_Premium_Server_CA.pem | tee /etc/postfix/cacert.pem
+
+- name: configure postfix
+  template:
+    src: main.cf.j2
+    dest: /etc/postfix/main.cf
+  notify:
+  - restart postfix
+
+- name: setup Mandrill credentials for postfix
+  template:
+    src: sasl_passwd.j2
+    dest: "{{ mandrill_sasl_file }}"
+    owner: root
+    group: root
+    mode: 600
+  notify:
+  - restart postfix
+
+- name: run postmap to configure postfix lookup tables
+  command: "postmap {{ mandrill_sasl_file }}"

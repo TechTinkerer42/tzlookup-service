@@ -1,0 +1,14 @@
+- hosts: all
+  sudo: yes
+
+  vars:
+    genericusers_users:
+      - name: developer
+        password: douglas42
+        shell: /bin/bash
+        groups: [ "sudo" ]
+        ssh_keys:
+          - "ssh-rsa ....."
+
+  roles:
+  - role: michaelcontento.securebase

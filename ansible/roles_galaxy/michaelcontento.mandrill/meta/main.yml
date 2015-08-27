@@ -1,0 +1,10 @@
+galaxy_info:
+  author: Michael Contento (michaelcontento@gmail.com)
+  description: Use mandrill as postfix mailrelay
+  license: MIT
+  min_ansible_version: 1.2
+  categories:
+  - development
+  - system
+
+dependencies: []

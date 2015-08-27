@@ -1,0 +1,48 @@
+---
+# these should be roles
+- include: base.yml
+- include: postgis.yml
+
+- hosts: all
+  sudo: yes
+
+  vars:
+    db_name: tzlookup
+    db_user: tzlookup
+    db_passwd: swordfish2
+
+  tasks:
+    - apt: pkg={{ item }} state=present
+      with_items:
+        - postgis # for shp2pgsql command
+        - libpq-dev
+        - python-psycopg2 # for ansible's `postgres` module
+        - unzip # for ansible's `unarchive`
+
+    # prepare our postgresql
+    - postgresql_user: name={{ db_user }} password={{ db_passwd }} role_attr_flags=CREATEDB,NOSUPERUSER
+      sudo_user: postgres
+    - postgresql_db: name={{ db_name }}
+                     encoding='UTF-8'
+                     lc_collate='en_US.UTF-8'
+                     lc_ctype='en_US.UTF-8'
+                     template='template0'
+                     owner='{{ db_user }}'
+      sudo_user: postgres
+    - postgresql_ext: name=postgis db={{ db_name }}
+      sudo_user: postgres
+    - postgresql_privs: db={{ db_name }}
+                        privs=ALL
+                        objs=ALL_IN_SCHEMA
+                        type=table
+                        role={{ db_user }}
+      sudo_user: postgres
+
+    # import shapefile
+    - get_url: url=http://efele.net/maps/tz/world/tz_world.zip dest=/tmp/tz_world.zip
+    - unarchive: src=/tmp/tz_world.zip dest=/tmp/ copy=no
+    - shell: shp2pgsql -d -S -s 4326 -I /tmp/world/tz_world | psql -h localhost -U {{ db_user }} {{ db_name }}
+      environment:
+        PGPASSWORD: "{{ db_passwd }}"
+
+    #

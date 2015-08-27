@@ -1,0 +1,23 @@
+- hosts: all
+  sudo: yes
+
+  vars:
+    postgresql_version: "9.4"
+    postgresql_package_version: "9.4.*-1.pgdg14.04+1"
+    postgis_version: "2.1"
+    postgis_package_version: "2.1.*.pgdg14.04+1"
+    postgresql_listen_addresses: "*"
+    postgresql_hba_mapping:
+      - { type: "host", database: "all", user: "all", address: "0.0.0.0/0", method: "md5" }
+      - { type: "host", database: "all", user: "all", address: "10.0.2.0/24", method: "md5" }
+
+  roles:
+    - role: azavea.postgis
+
+  tasks:
+    - apt: pkg={{ item }} state=present
+      with_items:
+        - postgis # for shp2pgsql command
+        - libpq-dev
+        - python-psycopg2 # for ansible's `postgres` module
+        - unzip # for ansible's `unarchive`

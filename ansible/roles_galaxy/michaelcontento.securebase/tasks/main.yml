@@ -1,0 +1,8 @@
+- name: Upgrade all installed packages
+  apt:
+    upgrade: "{{ apt_upgrade }}"
+
+- name: Install sshguard
+  apt:
+    pkg: sshguard
+    state: present

@@ -1,0 +1,19 @@
+- hosts: all
+  sudo: yes
+
+  vars:
+    genericusers_users:
+      - name: developer
+        password: swordfish
+        shell: /bin/bash
+        groups: [ "sudo" ]
+        ssh_keys:
+          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC1h7C799mTinjqW3AFP44tnUvqih+quACyV6d0PRlbYVLDklHrdjgk9cpW5sQcDmCtXTt2a8t826G3Ma3YjQgE6t04ey7dInFQGRr8gecIIOJWcD9uIIDYv53f57NIvXrx9IOnYJvSbzMfVhIGHzyWmTmW1okpD/9+fD5+kvQFJlilQep1FphVUfDNRmSU3IaI/B7lQ0WAC5iyaWSkzE9F2b12ByEWYphNFOfRPJED+1mRgGNvyIxzdpVkSNh3EN8q+FTOVznZqXoFVmTyiobVJBU1fgTQq99kV2HerntEl3FjTSrSpOuX7vzUOShdrqq8FaZ/bjqupZMxx7m6f18kYbEdGiaGc0ncpCy87QK+D0ZRndNBBcqLazFJd8SHkkDyW/JeHiPpypFiVm7Wb3QIn6z4jDJtpjF/ZSqANN7i+fzle29VY9x9MchI9ZfOSEX3jjn0It1rwI6K84VTelKajQ8Z/K8OZOsXqm9tVWO+6JSMncXXMWjGq82aIoC8LkyP4WSKxUxrMbNZHoJYg5WnOR2VMkF/Hem/OxvCOK54T4BoaI0ARNt8hgnk5+Y1Fbgx0ZjhqRFx95kykYLaoiZ1oLp0RgvKrc4brtn/kGhXvUPdr57pozdz6dzGwbL7/qRsxhtCCUVHKlOWhL2tuLNQGHHSZdX2jO+IoLqsL3+VWQ== m@rt.in"
+    ufw_rules_addition:
+      - { port: 5432, rule: allow }
+      - { port: 8080, rule: allow }
+
+  roles:
+    - role: michaelcontento.securebase
+    - role: calebwoods.brightbox_ruby
+      ruby_version: 2.2.2

@@ -1,0 +1,5 @@
+mandrill_username: ""
+mandrill_api_key: ""
+mandrill_sasl_file: /etc/postfix/sasl_passwd
+mandrill_myhostname: ""
+mandrill_mydomain: ""

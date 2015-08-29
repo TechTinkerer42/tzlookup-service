@@ -1,18 +1,18 @@
 # tzlookup service
 
-##
+## Usage
 
 
 ## Next steps
 
-{} ~~tune postgresql~~ (applied https://github.com/gregs1104/pgtune)~~
+* ~~tune postgresql (apply https://github.com/gregs1104/pgtune)~~
 * tune amount of puma threads/processes
 * tune sequel connection pool
 
 
 ## Benchmark (between 2 digitialocean nodes)
 
-Service hosted on 10$/month digitialocean machine (1cpu)
+Service hosted on 10$/month digitialocean vm (1 cpu, 1gb memory)
 
 ### 300tps
 ```

@@ -1,5 +1,4 @@
 ---
-# these should be roles
 - include: base.yml
 - include: postgis.yml
 

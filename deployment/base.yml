@@ -4,7 +4,6 @@
   vars:
     genericusers_users:
       - name: developer
-        password: swordfish
         shell: /bin/bash
         groups: [ "sudo" ]
         ssh_keys:

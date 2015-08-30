@@ -9,7 +9,7 @@ DATABASE = Sequel.postgres(
   :database => 'tzlookup',
   :max_connections => 16
 )
-QUERY = "SELECT tzid FROM tz_world WHERE ST_Intersects(ST_GeomFromText('POINT(? ?)', 4326), geom);"
+QUERY = 'SELECT tzid FROM tz_world WHERE ST_Intersects(ST_SetSRID(ST_MakePoint(?, ?), 4326), geom);'
 
 class TzLookup < Roda
   plugin :halt

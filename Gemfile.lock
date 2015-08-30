@@ -2,11 +2,16 @@ GEM
   remote: https://rubygems.org/
   specs:
     pg (0.18.2)
+    power_assert (0.2.2)
     puma (2.13.4)
     rack (1.6.4)
+    rack-test (0.6.3)
+      rack (>= 1.0)
     roda (2.5.1)
       rack
     sequel (4.25.0)
+    test-unit (3.0.8)
+      power_assert
 
 PLATFORMS
   ruby
@@ -14,8 +19,10 @@ PLATFORMS
 DEPENDENCIES
   pg
   puma
+  rack-test
   roda
   sequel
+  test-unit
 
 BUNDLED WITH
    1.10.6

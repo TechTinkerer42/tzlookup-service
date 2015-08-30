@@ -62,7 +62,7 @@ The response of this endpoint will always be in json:
 
         $ cd deployment
         $ vagrant up
-
+        $ ansible-playbook-vagrant playbook.yml
 
 2. verify the host is up:
 

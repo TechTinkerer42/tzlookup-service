@@ -2,24 +2,24 @@
 
 ## Overview
 
-This service leverages the tz_world shapefiles from [efele.net](http://efele.net/maps/tz/world/), to provide a timezone lookup via latitude/longitude. It does so by loading the shapefile into a postgresql database with active postGIS extension.
+This service leverages the *tz_world shapefiles* from [efele.net](http://efele.net/maps/tz/world/), to provide a timezone lookup via latitude/longitude. It does so by loading the shapefile into a postgresql database with active postGIS extension.
 
 
 ### Performance vs. Accuracy
 
 Finding the timezones for a given geo coordinate means finding the polygon it resides lies in. The ["Point in polygon"](https://en.wikipedia.org/wiki/Point_in_polygon) problem is generally known to be expensive.
 
-Checking if a coordinate is within the *bounding box* of a polygon is much cheaper, but sacrifices accuracy and introduces situations where points might be within 2 differnt bounding boxes. Accuracy could here be directly traded off in the preprocessing phase by having bigger or smaller bounding boxes.
+Checking if a coordinate is within the *bounding box* of a polygon is much cheaper, but sacrifices accuracy and introduces collisions where points might be within 2 different bounding boxes. Lookup accuracy and performance could here be directly traded for each other in the preprocessing phase by having bigger or smaller bounding boxes.
 
-This service owes it's performance mostly to postgres's postgis extensions speed: The [`ST_Intersects`](http://postgis.org/docs/ST_Intersects.html) method that is being used, uses a fast index based lookup on bounding boxes of the polygons in the database and only runs the accurate/expensive polygon intersection logic on the remaining candidates. This keep the accuracy extremely high with very good performance.
+This service owes it's performance mostly to postgres's postgis extensions speed: The [`ST_Intersects`](http://postgis.org/docs/ST_Intersects.html) method, uses a fast index based lookup on bounding boxes of the polygons in the database and only runs the accurate/expensive polygon intersection logic on the remaining candidates. This keeps the accuracy extremely high while having very good performance.
 
 ### Scalability of the service
 
-For some examples of the performance this service achieves, see the [benchmark](./benchmark/) folder. The average response time of the service itself  - without network overhead - remains consistently below *10ms* as long as the CPU and connection limits are not at their respective limits.
+For some examples of the performance this service achieves, see the [benchmark](./benchmark/) folder. The average response time of the service itself  - without network overhead - remains consistently below *10ms* as long as the CPU usage and connection counts are not at their respective limits.
 
 Since this service does *not* see the postgis enabled database as a shared commodity between all hosts but instead sees it as a purely local datastructure, the service can be infinitely scaled horizontally behind a load balancer without worrying about a central point of failure.
 
-Generally speaking: if the service's response time is sufficiently low for your purposes at low tps, you can easily achieve higher tps values by scaling out horizontally. While it's also possible to achieve higher tps values by scaling up, this requires fine tuning the amount of *puma* workers and threads, and postgresql connections to match the more powerful hardware.
+Generally speaking: if the service's response time is sufficient for your purposes at low tps, you can easily achieve higher tps values by scaling out horizontally. While it's also possible to achieve higher tps values by scaling up, this requires fine tuning the amount of *puma* workers and threads, and postgresql connections to match the more powerful hardware.
 
 If the response time does not match your SLA even at low tps and the network latency itself is not to blame, lower response times can probably be only gained by optimizations in the code (pull requests are welcome).
 

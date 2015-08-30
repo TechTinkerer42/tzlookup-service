@@ -23,6 +23,31 @@ Generally speaking: if the service's response time is sufficient for your purpos
 
 If the response time does not match your SLA even at low tps and the network latency itself is not to blame, lower response times can probably be only gained by optimizations in the code (pull requests are welcome).
 
+### API
+
+The service has two endpoints currently, one to check it's status which always returns `OK`:
+
+    http://hostname/status
+
+And the actual service endpoint that takes three parameters in it's URL: `lat`, `lng`, and `api_key`:
+
+    http://hostname/time_zone?lat=48.8567&lng=2.348692&api_key=THE_API_KEY
+
+The response of this endpoint will always be in json:
+
+    {"time_zone_id":"Europe/Paris"}
+
+### Errors
+
+
+| Error                                          | Response Code | Response Body                                   |
+|------------------------------------------------|---------------|-------------------------------------------------|
+| lat/lng missing                                | 400           | `{"error": "missing lat/lng query parameter!"}` |
+| no timezone found for coordinates              | 404           | `{"error": "no time_zone_id found!"}`           |
+| api_key not given                              | 401           | `{"error": "missing api_key query parameter!"}` |
+| api_key not known/blocked (not implemted yet!) | 403           | -                                               |
+
+
 ## Usage
 
 0. install requirements (vagrant, virtualbox, ansible, ansible-vagrant)

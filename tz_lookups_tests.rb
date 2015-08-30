@@ -53,6 +53,22 @@ class TestApp < Test::Unit::TestCase
     assert_equal 'OK', last_response.body
   end
 
+  def test_missing_api_key
+    get '/time_zone?lat=%s&lng=%s' % [48.8567, 2.348692]
+    assert last_response.unauthorized?
+  end
+
+  def test_missing_lat_lng
+    get '/time_zone?api_key=%s' % ['THE_API_KEY']
+    assert last_response.bad_request?
+
+    get '/time_zone?lat=%s&api_key=%s' % [48.8567, 'THE_API_KEY']
+    assert last_response.bad_request?
+
+    get '/time_zone?lng=%s&api_key=%s' % [2.348692, 'THE_API_KEY']
+    assert last_response.bad_request?
+  end
+
   def test_from_email
     get '/time_zone?lat=%s&lng=%s&api_key=%s' % [48.8567, 2.348692, 'THE_API_KEY']
     assert_equal 200, last_response.status

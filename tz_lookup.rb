@@ -26,12 +26,17 @@ class TzLookup < Roda
 
   route do |r|
     r.on 'time_zone' do
-      lat = params[:lat]
-      lng = params[:lng]
       api_key = params[:api_key]
 
-      if lat.nil? || lng.nil? || api_key.nil?
-        r.halt(400, {:error => 'missing lat|lng|api_key query parameter!'})
+      if api_key.nil?
+        r.halt(401, {:error => 'missing api_key query parameter!'})
+      end
+
+      lat = params[:lat]
+      lng = params[:lng]
+
+      if lat.nil? || lng.nil?
+        r.halt(400, {:error => 'missing lat|lng query parameter!'})
       end
 
       tzid = find_timezone_id(lat.to_f, lng.to_f)

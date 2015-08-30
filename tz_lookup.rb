@@ -7,7 +7,8 @@ DATABASE = Sequel.postgres(
   :user => 'tzlookup',
   :password => 'swordfish2',
   :database => 'tzlookup',
-  :max_connections => 16
+  :max_connections => 64,
+  :sslmode => 'disable' # we're only using it on localhost
 )
 QUERY = 'SELECT tzid FROM tz_world WHERE ST_Intersects(ST_SetSRID(ST_MakePoint(?, ?), 4326), geom);'
 

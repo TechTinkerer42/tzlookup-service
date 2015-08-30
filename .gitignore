@@ -1,1 +1,3 @@
 hosts_vagrant
+/.bundle
+/vendor

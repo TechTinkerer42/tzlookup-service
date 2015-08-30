@@ -6,6 +6,9 @@
   sudo: yes
 
   vars:
+    deployment_user: developer
+    deployment_path: /home/{{ deployment_user }}/tzlookup-service
+    checkout_version: master
     db_name: tzlookup
     db_user: tzlookup
     db_passwd: swordfish2
@@ -13,6 +16,7 @@
   tasks:
     - apt: pkg={{ item }} state=present
       with_items:
+        - git
         - postgis # for shp2pgsql command
         - libpq-dev
         - python-psycopg2 # for ansible's `postgres` module
@@ -44,4 +48,22 @@
       environment:
         PGPASSWORD: "{{ db_passwd }}"
 
-    #
+    # checkout app
+    - copy: src=files/id_rsa dest=/home/{{ deployment_user }}/.ssh/id_rsa owner={{ deployment_user }} group={{ deployment_user }} mode="u+rw,g-rwx,o-rwx"
+    - copy: src=files/id_rsa.pub dest=/home/{{ deployment_user }}/.ssh/id_rsa.pub owner={{ deployment_user }} group={{ deployment_user }} mode="u+rw,g-rwx,o-rwx"
+    - git: repo=git@github.com:tinnet/tzlookup-service.git dest={{ deployment_path }} version={{ checkout_version }} key_file=/home/{{ deployment_user }}/.ssh/id_rsa
+      sudo_user: "{{ deployment_user }}"
+
+    # prepare app
+    - command: bundle install --deployment chdir={{ deployment_path }}
+
+    # setup puma via upstart (https://github.com/puma/puma/tree/master/tools/jungle/upstart)
+    - file: path={{ deployment_path }}/tmp/puma state=directory mode=0755 owner={{ deployment_user }}
+    - template: src=templates/init/puma-manager.conf dest=/etc/init/puma-manager.conf
+    - template: src=templates/init/puma.conf dest=/etc/init/puma.conf
+    - file: path={{ deployment_path }}/config state=directory mode=0755 owner={{ deployment_user }}
+    - template: src=templates/puma.rb dest={{ deployment_path }}/config/puma.rb
+
+    - file: path=/etc/puma.conf state=touch
+    - lineinfile: dest=/etc/puma.conf line={{ deployment_path }}
+    - service: name=puma-manager enabled=yes state=started

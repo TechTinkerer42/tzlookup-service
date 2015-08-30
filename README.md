@@ -27,41 +27,38 @@ If the response time does not match your SLA even at low tps and the network lat
 
 0. install requirements (vagrant, virtualbox, ansible, ansible-vagrant)
 
-For example on a mac:
+    For example on a mac:
 
-	$ brew cask install vagrant virtualbox
-	$ brew install ansible
-	$ pip install ansible-vagrant
+        $ brew cask install vagrant virtualbox
+        $ brew install ansible
+        $ pip install ansible-vagrant
 
 1. spin up virtual machine via vagrant
 
-
-	$ cd ansible
-	$ vagrant up
+        $ cd ansible
+        $ vagrant up
 
 
 2. verify the host is up:
 
-
-	$ curl "http://localhost:8080/time_zone?lat=48.8567&lng=2.348692&api_key=THE_API_KEY"
-	OK
+        $ curl "http://localhost:8080/time_zone?lat=48.8567&lng=2.348692&api_key=THE_API_KEY"
+        OK
 
 
 3. run tests (depend on running virtual machine!)
 
+        $ bundle install
+        $ bundle exec ruby tz_lookups_tests.rb
+        Loaded suite tz_lookups_tests
+        Started
+        ...
 
-    $ bundle install
-    $ bundle exec ruby tz_lookups_tests.rb
-    Loaded suite tz_lookups_tests
-    Started
-    ...
+        Finished in 0.086665 seconds.
 
-    Finished in 0.086665 seconds.
+        3 tests, 68 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
+        100% passed
 
-    3 tests, 68 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
-    100% passed
-
-    34.62 tests/s, 784.63 assertions/s
+        34.62 tests/s, 784.63 assertions/s
 
 
 ## Next steps

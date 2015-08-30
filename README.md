@@ -17,7 +17,11 @@ This service owes it's performance mostly to postgres's postgis extensions speed
 
 For some examples of the performance this service achieves, see the [benchmark](./benchmark/) folder. The average response time of the service itself  - without network overhead - remains consistently below *10ms* as long as the CPU and connection limits are not at their respective limits.
 
-Since this service does *not* see the postgis enabled database as a shared commodity between all hosts but instead sees it as a purely local datastructure, the service can be infinitely scaled horizontally behind a load balancer without worrying about a central point of failure
+Since this service does *not* see the postgis enabled database as a shared commodity between all hosts but instead sees it as a purely local datastructure, the service can be infinitely scaled horizontally behind a load balancer without worrying about a central point of failure.
+
+Generally speaking: if the service's response time is sufficiently low for your purposes at low tps, you can easily achieve higher tps values by scaling out horizontally. While it's also possible to achieve higher tps values by scaling up, this requires fine tuning the amount of *puma* workers and threads, and postgresql connections to match the more powerful hardware.
+
+If the response time does not match your SLA even at low tps and the network latency itself is not to blame, lower response times can probably be only gained by optimizations in the code (pull requests are welcome).
 
 ## Usage
 
@@ -44,6 +48,17 @@ For example on a mac:
 
     $ bundle install
     $ bundle exec ruby tz_lookups_tests.rb
+    Loaded suite tz_lookups_tests
+    Started
+    ...
+
+    Finished in 0.086665 seconds.
+
+    3 tests, 68 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
+    100% passed
+
+    34.62 tests/s, 784.63 assertions/s
+
 
 ## Next steps
 

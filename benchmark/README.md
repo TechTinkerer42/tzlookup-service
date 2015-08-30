@@ -1,6 +1,6 @@
 # benchmarks
 
-As an imaginary target performance, we assume an SLA of *50ms* on the *95percentile*.
+As an imaginary target performance, we assume an SLA of *50ms* on the *95percentile*. The amount of concurrent connections is to be determined during the benchmarks.
 
 ## Tooling
 Benchmarks are done with [vegeta](https://github.com/tsenart/vegeta)
@@ -140,7 +140,32 @@ Bucket           #       %       Histogram
 
 ### @150tps for 30m
 
-This test with a lower tps
+This test shows that with a lower tps the service manages to (barely) reach the targeted SLA.
 
 ```
+Requests        [total, rate]                   270000, 150.00
+Duration        [total, attack, wait]           30m0.090786542s, 29m59.993153125s, 97.633417ms
+Latencies       [mean, 50, 95, 99, max]         88.560362ms, 89.042294ms, 100.762409ms, 108.184683ms, 379.913417ms
+Bytes In        [total, mean]                   8977508, 33.25
+Bytes Out       [total, mean]                   0, 0.00
+Success         [ratio]                         100.00%
+Status Codes    [code:count]                    200:270000
+Error Set:
+
+Bucket           #      %       Histogram
+[50ms,   55ms]   0      0.00%
+[55ms,   60ms]   0      0.00%
+[60ms,   65ms]   0      0.00%
+[65ms,   70ms]   0      0.00%
+[70ms,   75ms]   1761   0.65%
+[75ms,   80ms]   18417  6.82%   #####
+[80ms,   85ms]   76396  28.29%  #####################
+[85ms,   90ms]   55125  20.42%  ###############
+[90ms,   95ms]   85753  31.76%  #######################
+[95ms,   100ms]  17161  6.36%   ####
+[100ms,  105ms]  9905   3.67%   ##
+[105ms,  110ms]  3368   1.25%
+[110ms,  115ms]  927    0.34%
+[115ms,  120ms]  375    0.14%
+[120ms,  +Inf]   812    0.30%
 ```

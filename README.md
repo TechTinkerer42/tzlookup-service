@@ -35,16 +35,20 @@ For example on a mac:
 
 1. spin up virtual machine via vagrant
 
+
 	$ cd ansible
 	$ vagrant up
 
 
 2. verify the host is up:
 
+
 	$ curl "http://localhost:8080/time_zone?lat=48.8567&lng=2.348692&api_key=THE_API_KEY"
 	OK
 
+
 3. run tests (depend on running virtual machine!)
+
 
     $ bundle install
     $ bundle exec ruby tz_lookups_tests.rb

@@ -18,7 +18,8 @@ class TzLookup < Roda
   plugin :json
 
   def find_timezone_id(lat, lng)
-    first_row = DATABASE[QUERY, lat.to_f, lng.to_f].first
+    # n.b. postgis uses (lng, lat), not (lat, lng)!
+    first_row = DATABASE[QUERY, lng.to_f, lat.to_f].first
     first_row.nil? ? nil : first_row[:tzid]
   end
 

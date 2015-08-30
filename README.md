@@ -35,14 +35,16 @@ If the response time does not match your SLA even at low tps and the network lat
 
 1. spin up virtual machine via vagrant
 
-        $ cd ansible
+        $ cd deployment
         $ vagrant up
 
 
 2. verify the host is up:
 
-        $ curl "http://localhost:8080/time_zone?lat=48.8567&lng=2.348692&api_key=THE_API_KEY"
+        $ curl "http://localhost:8080/status"
         OK
+        $ curl "http://localhost:8080/time_zone?lat=48.8567&lng=2.348692&api_key=THE_API_KEY"
+        {"time_zone_id":"Europe/Paris"}
 
 
 3. run tests (depend on running virtual machine!)
